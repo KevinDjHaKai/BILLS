@@ -261,9 +261,9 @@ InfiniteYieldTab:AddButton({
 })
 
 InfiniteYieldTab:AddButton({
-    Name = "9xStatus",
+    Name = "HaKaiStatus",
     Callback = function()
-        loadstring(game:HttpGet("https://tinyurl.com/Stats9xScripts"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/KevinDjHaKai/BILLS/refs/heads/main/STATSHUB"))()
     end
 })
 OrionLib:Init()
