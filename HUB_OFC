@@ -133,7 +133,7 @@ FarmTab:AddToggle({
 })
 
 FarmTab:AddToggle({
-    Name = "Auto ForÃ§a",
+    Name = "Auto Strength",
     Default = false,
     Callback = function(v)
         _G.AutoStr = v
@@ -157,12 +157,12 @@ FarmTab:AddButton({
 })
 
 local InfiniteYieldTab = Window:MakeTab({
-    Name = "FUNÃ‡Ã•ES A+",
+    Name = "FUNC A+",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
 })
 
-InfiniteYieldTab:AddSection({ Name = "FUNÃ‡Ã•ES ADICIONAIS" })
+InfiniteYieldTab:AddSection({ Name = "FUNC ADICIONAIS" })
 
 InfiniteYieldTab:AddButton({
     Name = "Anti-Lag",
