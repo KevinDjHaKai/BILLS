@@ -261,6 +261,13 @@ InfiniteYieldTab:AddButton({
 })
 
 InfiniteYieldTab:AddButton({
+    Name = "9xStatus",
+    Callback = function()
+        loadstring(game:HttpGet("https://tinyurl.com/Stats9xScripts"))()
+    end
+})
+
+InfiniteYieldTab:AddButton({
     Name = "HaKaiStatus",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/KevinDjHaKai/BILLS/refs/heads/main/STATSHUB"))()
