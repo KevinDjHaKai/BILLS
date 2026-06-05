@@ -1,0 +1,192 @@
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/KevinDjHaKai/BILLS/refs/heads/main/HUBORION"))()
+
+local Player = game.Players.LocalPlayer
+local Players = game:GetService("Players")
+
+local Window = OrionLib:MakeWindow({
+	Name = "Tea Hub | Player Viewer",
+	HidePremium = false,
+	SaveConfig = true,
+	ConfigFolder = "TeaHub"
+})
+
+--// Tabs
+
+local StatsTab = Window:MakeTab({
+	Name = "Stats",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local MiscTab = Window:MakeTab({
+	Name = "Misc",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+--// Labels
+
+local StrengthLabel = StatsTab:AddLabel("Strength: N/A")
+local DurabilityLabel = StatsTab:AddLabel("Durability: N/A")
+local EnduranceLabel = StatsTab:AddLabel("Endurance: N/A")
+local SpeedLabel = StatsTab:AddLabel("Speed: N/A")
+local WinsLabel = StatsTab:AddLabel("Wins: N/A")
+
+local BeltLabel = StatsTab:AddLabel("Belt: N/A")
+local SkinLabel = StatsTab:AddLabel("Skin: N/A")
+local PlaytimeLabel = StatsTab:AddLabel("Playtime: N/A")
+
+--// Selected Player
+
+local SelectedPlayer = Player
+local CurrentConnections = {}
+
+local function ClearConnections()
+	for _, Connection in ipairs(CurrentConnections) do
+		if Connection then
+			Connection:Disconnect()
+		end
+	end
+
+	table.clear(CurrentConnections)
+end
+
+local function UpdateSelectedPlayerInfo()
+	ClearConnections()
+
+	if not SelectedPlayer then
+		return
+	end
+
+	local Stats = SelectedPlayer:FindFirstChild("leaderstats")
+
+	if Stats then
+		local function RefreshStats()
+			StrengthLabel:Set("Strength: " .. ((Stats:FindFirstChild("Strength") and Stats.Strength.Value) or "N/A"))
+			DurabilityLabel:Set("Durability: " .. ((Stats:FindFirstChild("Durability") and Stats.Durability.Value) or "N/A"))
+			EnduranceLabel:Set("Endurance: " .. ((Stats:FindFirstChild("Endurance") and Stats.Endurance.Value) or "N/A"))
+			SpeedLabel:Set("Speed: " .. ((Stats:FindFirstChild("Speed") and Stats.Speed.Value) or "N/A"))
+			WinsLabel:Set("Wins: " .. ((Stats:FindFirstChild("Wins") and Stats.Wins.Value) or "N/A"))
+		end
+
+		RefreshStats()
+
+		for _, Value in ipairs(Stats:GetChildren()) do
+			if Value:IsA("IntValue") or Value:IsA("NumberValue") then
+				table.insert(
+					CurrentConnections,
+					Value:GetPropertyChangedSignal("Value"):Connect(RefreshStats)
+				)
+			end
+		end
+	end
+
+	local function RefreshProfile()
+		BeltLabel:Set(
+			"Belt: " ..
+			(SelectedPlayer:FindFirstChild("Belt")
+				and tostring(SelectedPlayer.Belt.Value)
+				or "N/A")
+		)
+
+		SkinLabel:Set(
+			"Skin: " ..
+			(SelectedPlayer:FindFirstChild("EquippedSkin")
+				and tostring(SelectedPlayer.EquippedSkin.Value)
+				or "N/A")
+		)
+
+		PlaytimeLabel:Set(
+			"Playtime: " ..
+			(SelectedPlayer:FindFirstChild("Playtime")
+				and tostring(SelectedPlayer.Playtime.Value)
+				or "N/A")
+		)
+	end
+
+	RefreshProfile()
+
+	for _, ObjectName in ipairs({"Belt", "EquippedSkin", "Playtime"}) do
+		local Obj = SelectedPlayer:FindFirstChild(ObjectName)
+
+		if Obj then
+			table.insert(
+				CurrentConnections,
+				Obj:GetPropertyChangedSignal("Value"):Connect(RefreshProfile)
+			)
+		end
+	end
+end
+
+--// Player List
+
+local function GetPlayerList()
+	local List = {}
+
+	for _, Plr in ipairs(Players:GetPlayers()) do
+		table.insert(List, Plr.Name)
+	end
+
+	table.sort(List)
+
+	return List
+end
+
+local PlayerDropdown
+
+local function RefreshPlayers()
+	if PlayerDropdown then
+		PlayerDropdown:Refresh(GetPlayerList(), true)
+	end
+end
+
+PlayerDropdown = StatsTab:AddDropdown({
+	Name = "Selecionar Jogador",
+	Default = Player.Name,
+	Options = GetPlayerList(),
+	Callback = function(Value)
+		local FoundPlayer = Players:FindFirstChild(Value)
+
+		if FoundPlayer then
+			SelectedPlayer = FoundPlayer
+			UpdateSelectedPlayerInfo()
+		end
+	end
+})
+
+StatsTab:AddButton({
+	Name = "Atualizar Lista",
+	Callback = function()
+		RefreshPlayers()
+	end
+})
+
+Players.PlayerAdded:Connect(RefreshPlayers)
+Players.PlayerRemoving:Connect(RefreshPlayers)
+
+--// Initial Load
+
+UpdateSelectedPlayerInfo()
+
+--// Misc
+
+MiscTab:AddButton({
+	Name = "Fechar Hub",
+	Callback = function()
+		pcall(function()
+			if OrionLib.Gui then
+				OrionLib.Gui:Destroy()
+			else
+				for _, v in ipairs(game.CoreGui:GetChildren()) do
+					if v.Name:lower():find("orion") then
+						v:Destroy()
+					end
+				end
+			end
+		end)
+	end
+})
+
+--// Init
+
+OrionLib:Init()
