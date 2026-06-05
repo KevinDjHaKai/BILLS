@@ -4,7 +4,7 @@ local Player = game.Players.LocalPlayer
 local Players = game:GetService("Players")
 
 local Window = OrionLib:MakeWindow({
-	Name = "Tea Hub | Player Viewer",
+	Name = "Tea Hub | HaKai Viewer",
 	HidePremium = false,
 	SaveConfig = true,
 	ConfigFolder = "TeaHub"
