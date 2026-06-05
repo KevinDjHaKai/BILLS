@@ -65,6 +65,30 @@ Heartbeat:Connect(function(deltaTime)
     end
 end)
 
+Heartbeat:Connect(function(deltaTime)
+    if _G.AutoStr2 then
+        acumulador = acumulador + deltaTime
+        if acumulador >= INTERVALO_TEMPO_HB then
+            acumulador = acumulador - INTERVALO_TEMPO_HB
+            pcall(function()
+                local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+                if Remotes then
+                    local DoubleReg = Remotes:FindFirstChild("DoubleReg")
+                    local Dumbell = Remotes:FindFirstChild("Dumbell")
+                    if DoubleReg and Dumbell then
+                        for i = 1, 3 do
+                            DoubleReg:FireServer()
+                            DoubleReg:FireServer()
+                            DoubleReg:FireServer()
+                        end
+                        Dumbell:FireServer("Rep", 3)
+                    end
+                end
+            end)
+        end
+    end
+end)
+
 local ENVIO_POR_FRAME = 3
 
 Heartbeat:Connect(function()
@@ -137,6 +161,14 @@ FarmTab:AddToggle({
     Default = false,
     Callback = function(v)
         _G.AutoStr = v
+    end
+})
+
+FarmTab:AddButton({
+    Name = "Auto Strength",
+    Default = false,
+    Callback = function(v)
+        _G.AutoStr2 = v
     end
 })
 
