@@ -18,6 +18,7 @@ end)
 
 _G.BILLS_OFC = false
 _G.AutoStr = false
+_G.AutoStr2 = false
 _G.AutoBench = false
 
 local function AutoDumbell()
