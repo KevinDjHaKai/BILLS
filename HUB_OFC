@@ -230,7 +230,7 @@ bench = t
 while bench do wait() 
     pcall(function()
 game:GetService("ReplicatedStorage").Remotes.Bench:FireServer()
-end ) 
+end) 
 end 
 end) 
 
