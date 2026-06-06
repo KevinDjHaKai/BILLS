@@ -18,7 +18,6 @@ end)
 
 _G.BILLS_OFC = false
 _G.AutoStr = false
-_G.AutoStr2 = false
 _G.AutoBench = false
 
 local function AutoDumbell()
@@ -40,37 +39,14 @@ end
 local RunService = game:GetService("RunService")
 local Heartbeat = RunService.Heartbeat
 local INTERVALO_TEMPO_HB = 0.01384
-local acumulador = 0
+
+local acumuladorStr = 0 
 
 Heartbeat:Connect(function(deltaTime)
     if _G.AutoStr then
-        acumulador = acumulador + deltaTime
-        if acumulador >= INTERVALO_TEMPO_HB then
-            acumulador = acumulador - INTERVALO_TEMPO_HB
-            pcall(function()
-                local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
-                if Remotes then
-                    local DoubleReg = Remotes:FindFirstChild("DoubleReg")
-                    local Dumbell = Remotes:FindFirstChild("Dumbell")
-                    if DoubleReg and Dumbell then
-                        for i = 1, 3 do
-                            DoubleReg:FireServer()
-                            DoubleReg:FireServer()
-                            DoubleReg:FireServer()
-                        end
-                        Dumbell:FireServer("Rep", 3)
-                    end
-                end
-            end)
-        end
-    end
-end)
-
-Heartbeat:Connect(function(deltaTime)
-    if _G.AutoStr2 then
-        acumulador = acumulador + deltaTime
-        if acumulador >= INTERVALO_TEMPO_HB then
-            acumulador = acumulador - INTERVALO_TEMPO_HB
+        acumuladorStr = acumuladorStr + deltaTime
+        if acumuladorStr >= INTERVALO_TEMPO_HB then
+            acumuladorStr = acumuladorStr - INTERVALO_TEMPO_HB
             pcall(function()
                 local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
                 if Remotes then
@@ -91,7 +67,6 @@ Heartbeat:Connect(function(deltaTime)
 end)
 
 local ENVIO_POR_FRAME = 3
-
 Heartbeat:Connect(function()
     if _G.AutoBench then
         pcall(function()
@@ -107,6 +82,231 @@ Heartbeat:Connect(function()
                         PushUpRemote:FireServer(true)
                         BenchRemote:FireServer(true)
                         PushUpRemote:FireServer(true)
+                        PushUpRemote:FireServer(true)
+                    end
+                end
+            end
+        end)
+    end
+end)
+
+-- Aba de Auto Farm
+local FarmTab = Window:MakeTab({
+    Name = "Auto Farm",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+FarmTab:AddToggle({
+    Name = "Auto Dumbell",
+    Default = false,
+    Callback = function(v)
+        _G.BILLS_OFC = v
+        if v then
+            task.spawn(AutoDumbell)
+        end
+    end
+})
+
+FarmTab:AddToggle({
+    Name = "Auto Strength",
+    Default = false,
+    Callback = function(v)
+        _G.AutoStr = v
+    end
+})
+
+FarmTab:AddButton({
+    Name = "Auto Strength2",
+    Callback = function()
+  
+        task.spawn(function()
+            local envios = 3 
+            while true do
+                task.wait(0.000) 
+                pcall(function()
+                    local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+                    if Remotes then
+                        local DoubleReg = Remotes:FindFirstChild("DoubleReg")
+                        local Dumbell = Remotes:FindFirstChild("Dumbell")
+                        if DoubleReg and Dumbell then
+                            for i = 1, envios do
+                                DoubleReg:FireServer()
+                                DoubleReg:FireServer()
+                                DoubleReg:FireServer()
+                            end
+                            Dumbell:FireServer("Rep", 3)
+                        end
+                    end
+                end)
+            end
+        end)
+    end
+})
+
+
+FarmTab:AddToggle({
+    Name = "Auto Bench",
+    Default = false,
+    Callback = function(v)
+        _G.AutoBench = v
+    end
+})
+
+FarmTab:AddButton({
+    Name = "Auto Bench2",
+    Callback = function()
+        task.spawn(function()
+            local envios = 3
+            while true do
+
+                task.wait(0.0000) 
+                
+                pcall(function()
+                    local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+                    if Remotes then
+                        local BenchRemote = Remotes:FindFirstChild("Bench")
+                        local PushUpRemote = Remotes:FindFirstChild("PushUp")
+                        if BenchRemote and PushUpRemote then
+                            for i = 1, envios do
+                                BenchRemote:FireServer(true)
+                                BenchRemote:FireServer(true)
+                                BenchRemote:FireServer(true)
+                                PushUpRemote:FireServer(true)
+                                BenchRemote:FireServer(true)
+                                PushUpRemote:FireServer(true)
+                                PushUpRemote:FireServer(true)
+                            end
+                        end
+                    end
+                end)
+            end
+        end)
+    end
+})
+
+local InfiniteYieldTab = Window:MakeTab({
+    Name = "FUNC A+",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+InfiniteYieldTab:AddSection({ Name = "FUNC ADICIONAIS" })
+
+InfiniteYieldTab:AddButton({
+    Name = "Anti-Lag",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/hakai0fc/ANTILAG/refs/heads/main/HAKAI2'))()
+    end
+})
+
+InfiniteYieldTab:AddButton({
+    Name = "HubExclusivo",
+    Callback = function()
+local VLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/vep1032/VepStuff/main/Rgb%20Ui"))()
+
+MAINTTL = "STRAW HUB"
+
+local win = VLib:Window("COBRA KAI", Color3.fromRGB(196, 40, 28))
+
+local ss = win:Tab("MAIN")
+local sss = win:Tab("CREDITS")
+
+--ANTI AFK 
+pcall(function()
+    local VirtualUser=game:service'VirtualUser'
+    game:service'Players'.LocalPlayer.Idled:connect(function()
+    warn("anti-afk")
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new())
+       end)
+    end) 
+
+--GLOBALS 
+LP = game.Players.LocalPlayer
+VIM = game:GetService("VirtualInputManager")
+
+--MAIN SCRIPT
+ss:Toggle("Autofarm Bags",function(t)
+    farm2 = t
+    while farm2 do wait()
+        pcall(function()
+           game:GetService("ReplicatedStorage").Remotes.DoubleReg:FireServer(math.random(1,5))
+          end) 
+       end 
+    end)
+
+ss:Toggle("Autofarm Pushups",function(t)
+    farm = t
+    while farm do wait() 
+      pcall(function()
+       game:GetService("ReplicatedStorage").Remotes.PushUp:FireServer()
+     end)
+  end
+end) 
+
+ss:Toggle("Autofarm Situps",function(t)
+    farm3 = t 
+    while farm3 do wait() 
+      pcall(function()
+       game:GetService("ReplicatedStorage").Remotes.SitUp:FireServer()
+     end)
+  end
+end) 
+
+ss:Toggle("AutoClick Benchpress OP",function(t)
+bench = t 
+while bench do wait() 
+    pcall(function()
+game:GetService("ReplicatedStorage").Remotes.Bench:FireServer()
+game:GetService("ReplicatedStorage").Remotes.Bench:FireServer()
+game:GetService("ReplicatedStorage").Remotes.PushUp:FireServer()
+game:GetService("ReplicatedStorage").Remotes.Bench:FireServer()
+game:GetService("ReplicatedStorage").Remotes.PushUp:FireServer()
+end) 
+end 
+end) 
+
+ss:Toggle("AutoUse Dumbells",function(t)
+dumb = t 
+while dumb do wait() 
+    pcall(function()
+game:GetService("ReplicatedStorage").Remotes.Dumbell:FireServer("Equip") 
+game:GetService("ReplicatedStorage").Remotes.Dumbell:FireServer("Rep",math.random(1,2))
+end) 
+end 
+end)
+    end
+})
+
+InfiniteYieldTab:AddButton({
+    Name = "9xScriptV3",
+    Callback = function()
+        loadstring(game:HttpGet("https://tinyurl.com/Hub-v3-9xScripts"))()
+    end
+})
+
+InfiniteYieldTab:AddButton({
+    Name = "9xScriptV4",
+    Callback = function()
+        loadstring(game:HttpGet("https://tinyurl.com/Hub-V4-9xScripts"))()
+    end
+})
+
+InfiniteYieldTab:AddButton({
+    Name = "9xStatus",
+    Callback = function()
+        loadstring(game:HttpGet("https://tinyurl.com/Stats9xScripts"))()
+    end
+})
+
+InfiniteYieldTab:AddButton({
+    Name = "HaKaiStatus",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/KevinDjHaKai/BILLS/refs/heads/main/STATSHUB"))()
+    end
+})
+OrionLib:Init()                        PushUpRemote:FireServer(true)
                         PushUpRemote:FireServer(true)
                     end
                 end
