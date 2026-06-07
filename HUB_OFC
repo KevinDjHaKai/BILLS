@@ -8,8 +8,6 @@ local Window = OrionLib:MakeWindow({
     IntroEnabled = false
 })
 
-
-
 pcall(function()
     local VirtualUser = game:GetService("VirtualUser")
     game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -224,68 +222,36 @@ ss:Toggle("Autofarm Bags",function(t)
        end 
     end)
 
-
-
 ss:Toggle("Autofarm Pushups",function(t)
-
     farm = t
-
     while farm do wait() 
-
       pcall(function()
-
        game:GetService("ReplicatedStorage").Remotes.PushUp:FireServer()
-
      end)
-
   end
-
 end) 
-
-
 
 ss:Toggle("Autofarm Situps",function(t)
-
     farm3 = t 
-
     while farm3 do wait() 
-
       pcall(function()
-
        game:GetService("ReplicatedStorage").Remotes.SitUp:FireServer()
-
      end)
-
   end
-
 end) 
-
-
 
 ss:Toggle("AutoClick Benchpress OP",function(t)
-
-bench = t 
-
+    bench = t 
 while bench do wait() 
-
     pcall(function()
-
 game:GetService("ReplicatedStorage").Remotes.Bench:FireServer()
-
 game:GetService("ReplicatedStorage").Remotes.Bench:FireServer()
-
 game:GetService("ReplicatedStorage").Remotes.PushUp:FireServer()
-
 game:GetService("ReplicatedStorage").Remotes.Bench:FireServer()
-
 game:GetService("ReplicatedStorage").Remotes.PushUp:FireServer()
-
 end) 
-
 end 
-
 end) 
-
 
 
 ss:Toggle("AutoUse Dumbells",function(t)
@@ -300,16 +266,12 @@ end)
     end
 })
 
-
-
 InfiniteYieldTab:AddButton({
     Name = "9xScriptV3",
     Callback = function()
         loadstring(game:HttpGet("https://tinyurl.com/Hub-v3-9xScripts"))()
     end
 })
-
-
 
 InfiniteYieldTab:AddButton({
     Name = "9xScriptV4",
@@ -318,15 +280,12 @@ InfiniteYieldTab:AddButton({
     end
 })
 
-
-
 InfiniteYieldTab:AddButton({
     Name = "9xStatus",
     Callback = function()
         loadstring(game:HttpGet("https://tinyurl.com/Stats9xScripts"))()
     end
 })
-
 
 
 InfiniteYieldTab:AddButton({
