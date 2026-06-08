@@ -52,7 +52,7 @@ Heartbeat:Connect(function(deltaTime)
                     local DoubleReg = Remotes:FindFirstChild("DoubleReg")
                     local Dumbell = Remotes:FindFirstChild("Dumbell")
                     if DoubleReg and Dumbell then
-                        for i = 1, 3 do
+                        for i = 1, 1 do
                             DoubleReg:FireServer()
                             DoubleReg:FireServer()
                             DoubleReg:FireServer()
