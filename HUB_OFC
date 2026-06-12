@@ -300,7 +300,7 @@ InfiniteYieldTab:AddButton({
      end
 })
 local InfiniteYieldTab2 = Window:MakeTab({
-    Name = "FUNÇÕES A+",
+    Name = "Infinite",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
 })
