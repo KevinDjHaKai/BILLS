@@ -299,5 +299,19 @@ InfiniteYieldTab:AddButton({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/KevinDjHaKai/BILLS/refs/heads/main/STATSHUB"))()
      end
 })
+local InfiniteYieldTab2 = Window:MakeTab({
+    Name = "FUNÇÕES A+",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+InfiniteYieldTab2:AddSection({ Name = "FUNÇÕES ADICIONAIS" })
+
+InfiniteYieldTab2:AddButton({
+    Name = "InfiniteYield",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+    end
+})
 
 OrionLib:Init()
