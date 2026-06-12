@@ -38,8 +38,13 @@ end
 
 local RunService = game:GetService("RunService")
 local Heartbeat = RunService.Heartbeat
-local INTERVALO_TEMPO_HB = 0.01384
+local INTERVALO_TEMPO_HB = 0.012
 local acumuladorStr = 0 
+
+local golpes = {
+    "JumpKick", "HandKick", "DoubleReg", "CraneKick", 
+    "LegSweep", "RightPunch", "LeftPunch"
+}
 
 Heartbeat:Connect(function(deltaTime)
     if _G.AutoStr then
@@ -49,14 +54,14 @@ Heartbeat:Connect(function(deltaTime)
             pcall(function()
                 local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
                 if Remotes then
-                    local DoubleReg = Remotes:FindFirstChild("DoubleReg")
-                    local Dumbell = Remotes:FindFirstChild("Dumbell")
-                    if DoubleReg and Dumbell then
-                        for i = 1, 1 do
-                            DoubleReg:FireServer()
-                            DoubleReg:FireServer()
-                            DoubleReg:FireServer()
+                    for _, nomeGolpe in ipairs(golpes) do
+                        local remote = Remotes:FindFirstChild(nomeGolpe)
+                        if remote then
+                            remote:FireServer()
                         end
+                    end
+                    local Dumbell = Remotes:FindFirstChild("Dumbell")
+                    if Dumbell then
                         Dumbell:FireServer("Rep", 3)
                     end
                 end
