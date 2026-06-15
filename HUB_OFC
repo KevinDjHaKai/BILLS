@@ -96,7 +96,6 @@ Heartbeat:Connect(function()
     end
 end)
 
--- Criação das Abas
 local FarmTab = Window:MakeTab({
     Name = "Auto Farm",
     Icon = "rbxassetid://4483345998",
@@ -145,7 +144,7 @@ FarmTab:AddToggle({
                             end
                         end
                     end)
-                    task.wait(0.007) 
+                    task.wait(0.08) 
                 end
             end)
         end
@@ -169,7 +168,7 @@ FarmTab:AddToggle({
             task.spawn(function()
                 local envios = 3
                 while _G.AutoBench2 do
-                    task.wait(0.001) 
+                    task.wait(0.008) 
                     pcall(function()
                         local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
                         if Remotes then
@@ -387,7 +386,7 @@ task.spawn(function()
     local LocalPlayer = Players.LocalPlayer
     
     while true do
-        task.wait(0.016)
+        task.wait(0.1)
         if _G.AutoUseTools then
             pcall(function()
                 local character = LocalPlayer.Character
