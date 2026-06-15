@@ -23,7 +23,6 @@ _G.AutoKatana = false
 _G.AutoBench2 = false
 _G.AutoSpin = false
 _G.SpinSpeed = 20 
-_G.AutoEquipTools = false
 
 local function AutoDumbell()
     while _G.BILLS_OFC do 
@@ -381,6 +380,39 @@ InfiniteYieldTab2:AddTextbox({
     end	  
 })
 
+_G.AutoUseTools = false
+
+task.spawn(function()
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
+    
+    while true do
+        task.wait(0.016)
+        if _G.AutoUseTools then
+            pcall(function()
+                local character = LocalPlayer.Character
+                if character then
+                    for _, tool in pairs(character:GetChildren()) do
+                        if tool:IsA("Tool") then
+                            tool:Activate()
+                            tool:Activate()
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+InfiniteYieldTab2:AddToggle({
+    Name = "Auto Use Tools",
+    Default = false,
+    Callback = function(Value)
+        _G.AutoUseTools = Value
+    end
+})
+
+_G.AutoEquipTools = false
 task.spawn(function()
     local Players = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
@@ -409,7 +441,6 @@ InfiniteYieldTab2:AddToggle({
     Default = false,
     Callback = function(Value)
         _G.AutoEquipTools = Value
-
         if not Value then
             pcall(function()
                 local character = game:GetService("Players").LocalPlayer.Character
@@ -422,6 +453,7 @@ InfiniteYieldTab2:AddToggle({
         end
     end
 })
+
 local freezingua = nil
 local frozenParts = {}
 local badnames = {
@@ -708,4 +740,5 @@ PlayersTab:AddButton({
         end)
     end
 })
+
 OrionLib:Init()
