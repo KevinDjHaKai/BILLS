@@ -97,7 +97,6 @@ Heartbeat:Connect(function()
     end
 end)
 
--- Criação das Abas
 local FarmTab = Window:MakeTab({
     Name = "Auto Farm",
     Icon = "rbxassetid://4483345998",
