@@ -40,8 +40,8 @@ end
 
 local RunService = game:GetService("RunService")
 local Heartbeat = RunService.Heartbeat
-local INTERVALO_TEMPO_HB = 0.007
-local acumuladorStr = 0 
+local INTERVALO_TEMPO_HB = 0.016
+local acumuladorStr = 0.016
 
 local golpes = {
     "JumpKick", "HandKick", "DoubleReg", "CraneKick", 
@@ -144,7 +144,7 @@ FarmTab:AddToggle({
                             end
                         end
                     end)
-                    task.wait(0.08) 
+                    task.wait(0.1) 
                 end
             end)
         end
@@ -168,7 +168,7 @@ FarmTab:AddToggle({
             task.spawn(function()
                 local envios = 3
                 while _G.AutoBench2 do
-                    task.wait(0.008) 
+                    task.wait(0.016) 
                     pcall(function()
                         local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
                         if Remotes then
