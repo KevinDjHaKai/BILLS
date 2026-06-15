@@ -19,6 +19,11 @@ end)
 _G.BILLS_OFC = false
 _G.AutoStr = false
 _G.AutoBench = false
+_G.AutoKatana = false
+_G.AutoBench2 = false
+_G.AutoSpin = false
+_G.SpinSpeed = 20 
+_G.AutoEquipTools = false
 
 local function AutoDumbell()
     while _G.BILLS_OFC do 
@@ -34,11 +39,9 @@ local function AutoDumbell()
     end
 end
 
-
-
 local RunService = game:GetService("RunService")
 local Heartbeat = RunService.Heartbeat
-local INTERVALO_TEMPO_HB = 0.012
+local INTERVALO_TEMPO_HB = 0.007
 local acumuladorStr = 0 
 
 local golpes = {
@@ -70,8 +73,6 @@ Heartbeat:Connect(function(deltaTime)
     end
 end)
 
-
-
 local ENVIO_POR_FRAME = 3
 Heartbeat:Connect(function()
     if _G.AutoBench then
@@ -96,13 +97,12 @@ Heartbeat:Connect(function()
     end
 end)
 
+-- Criação das Abas
 local FarmTab = Window:MakeTab({
     Name = "Auto Farm",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
 })
-
-
 
 FarmTab:AddToggle({
     Name = "Auto Dumbell",
@@ -115,8 +115,6 @@ FarmTab:AddToggle({
     end
 })
 
-
-
 FarmTab:AddToggle({
     Name = "Auto Strength",
     Default = false,
@@ -125,30 +123,33 @@ FarmTab:AddToggle({
     end
 })
 
-FarmTab:AddButton({
-    Name = "Auto Strength2",
-    Callback = function()
-        task.spawn(function()
-            local envios = 3 
-            while true do
-                task.wait(0.000) 
-                pcall(function()
-                    local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
-                    if Remotes then
-                        local DoubleReg = Remotes:FindFirstChild("DoubleReg")
-                        local Dumbell = Remotes:FindFirstChild("Dumbell")
-                        if DoubleReg and Dumbell then
-                            for i = 1, envios do
-                                DoubleReg:FireServer()
-                                DoubleReg:FireServer()
-                                DoubleReg:FireServer()
+FarmTab:AddToggle({
+    Name = "Auto Katana",
+    Default = false,
+    Callback = function(v)
+        _G.AutoKatana = v
+        if v then
+            task.spawn(function()
+                while _G.AutoKatana do
+                    pcall(function()
+                        local player = game:GetService("Players").LocalPlayer
+                        local character = player.Character
+                        if character and character:FindFirstChild("Katana") then
+                            local handle = character.Katana:WaitForChild("Handle", 1)
+                            if handle then
+                                local args = {
+                                    [1] = handle
+                                }
+                                character.Katana:WaitForChild("Combo"):WaitForChild("C0"):FireServer(unpack(args))
+                                character.Katana:WaitForChild("Combo"):WaitForChild("C1"):FireServer(unpack(args))
+                                character.Katana:WaitForChild("Combo"):WaitForChild("C2"):FireServer(unpack(args))
                             end
-                            Dumbell:FireServer("Rep", 3)
                         end
-                    end
-                end)
-            end
-        end)
+                    end)
+                    task.wait(0.007) 
+                end
+            end)
+        end
     end
 })
 
@@ -160,36 +161,39 @@ FarmTab:AddToggle({
     end
 })
 
-FarmTab:AddButton({
+FarmTab:AddToggle({
     Name = "Auto Bench2",
-    Callback = function()
-        task.spawn(function()
-            local envios = 3
-            while true do
-                task.wait(0.0000) 
-                pcall(function()
-                    local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
-                    if Remotes then
-                        local BenchRemote = Remotes:FindFirstChild("Bench")
-                        local PushUpRemote = Remotes:FindFirstChild("PushUp")
-                        if BenchRemote and PushUpRemote then
-                            for i = 1, envios do
-                                BenchRemote:FireServer(true)
-                                BenchRemote:FireServer(true)
-                                BenchRemote:FireServer(true)
-                                PushUpRemote:FireServer(true)
-                                BenchRemote:FireServer(true)
-                                PushUpRemote:FireServer(true)
-                                PushUpRemote:FireServer(true)
+    Default = false,
+    Callback = function(v)
+        _G.AutoBench2 = v
+        if v then
+            task.spawn(function()
+                local envios = 3
+                while _G.AutoBench2 do
+                    task.wait(0.001) 
+                    pcall(function()
+                        local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+                        if Remotes then
+                            local BenchRemote = Remotes:FindFirstChild("Bench")
+                            local PushUpRemote = Remotes:FindFirstChild("PushUp")
+                            if BenchRemote and PushUpRemote then
+                                for i = 1, envios do
+                                    BenchRemote:FireServer(true)
+                                    BenchRemote:FireServer(true)
+                                    BenchRemote:FireServer(true)
+                                    PushUpRemote:FireServer(true)
+                                    BenchRemote:FireServer(true)
+                                    PushUpRemote:FireServer(true)
+                                    PushUpRemote:FireServer(true)
+                                end
                             end
                         end
-                    end
-                end)
-            end
-        end)
+                    end)
+                end
+            end)
+        end
     end
 })
-
 
 local InfiniteYieldTab = Window:MakeTab({
     Name = "FUNC A+",
@@ -198,6 +202,7 @@ local InfiniteYieldTab = Window:MakeTab({
 })
 
 InfiniteYieldTab:AddSection({ Name = "FUNC ADICIONAIS" })
+
 InfiniteYieldTab:AddButton({
     Name = "Anti-Lag",
     Callback = function()
@@ -208,66 +213,64 @@ InfiniteYieldTab:AddButton({
 InfiniteYieldTab:AddButton({
     Name = "HubExclusivo",
     Callback = function()
-local VLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/vep1032/VepStuff/main/Rgb%20Ui"))()
-MAINTTL = "HaKaI HUB"
-local win = VLib:Window("COBRA KAI", Color3.fromRGB(196, 40, 28))
-local ss = win:Tab("MAIN")
-local sss = win:Tab("CREDITS")
---GLOBALS 
-LP = game.Players.LocalPlayer
-VIM = game:GetService("VirtualInputManager")
+        local VLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/vep1032/VepStuff/main/Rgb%20Ui"))()
+        MAINTTL = "HaKaI HUB"
+        local win = VLib:Window("COBRA KAI", Color3.fromRGB(196, 40, 28))
+        local ss = win:Tab("MAIN")
+        local sss = win:Tab("CREDITS")
 
---MAIN SCRIPT
-ss:Toggle("Autofarm Bags",function(t)
-    farm2 = t
-    while farm2 do wait()
-        pcall(function()
-           game:GetService("ReplicatedStorage").Remotes.DoubleReg:FireServer(math.random(1,5))
-          end) 
-       end 
-    end)
+        LP = game.Players.LocalPlayer
+        VIM = game:GetService("VirtualInputManager")
 
-ss:Toggle("Autofarm Pushups",function(t)
-    farm = t
-    while farm do wait() 
-      pcall(function()
-       game:GetService("ReplicatedStorage").Remotes.PushUp:FireServer()
-     end)
-  end
-end) 
+        ss:Toggle("Autofarm Bags",function(t)
+            farm2 = t
+            while farm2 do wait()
+                pcall(function()
+                   game:GetService("ReplicatedStorage").Remotes.DoubleReg:FireServer(math.random(1,5))
+                end) 
+            end 
+        end)
 
-ss:Toggle("Autofarm Situps",function(t)
-    farm3 = t 
-    while farm3 do wait() 
-      pcall(function()
-       game:GetService("ReplicatedStorage").Remotes.SitUp:FireServer()
-     end)
-  end
-end) 
+        ss:Toggle("Autofarm Pushups",function(t)
+            farm = t
+            while farm do wait() 
+                pcall(function()
+                   game:GetService("ReplicatedStorage").Remotes.PushUp:FireServer()
+                end)
+            end
+        end) 
 
-ss:Toggle("AutoClick Benchpress OP",function(t)
-    bench = t 
-while bench do wait() 
-    pcall(function()
-game:GetService("ReplicatedStorage").Remotes.Bench:FireServer()
-game:GetService("ReplicatedStorage").Remotes.Bench:FireServer()
-game:GetService("ReplicatedStorage").Remotes.PushUp:FireServer()
-game:GetService("ReplicatedStorage").Remotes.Bench:FireServer()
-game:GetService("ReplicatedStorage").Remotes.PushUp:FireServer()
-end) 
-end 
-end) 
+        ss:Toggle("Autofarm Situps",function(t)
+            farm3 = t 
+            while farm3 do wait() 
+                pcall(function()
+                   game:GetService("ReplicatedStorage").Remotes.SitUp:FireServer()
+                end)
+            end
+        end) 
 
+        ss:Toggle("AutoClick Benchpress OP",function(t)
+            bench = t 
+            while bench do wait() 
+                pcall(function()
+                    game:GetService("ReplicatedStorage").Remotes.Bench:FireServer()
+                    game:GetService("ReplicatedStorage").Remotes.Bench:FireServer()
+                    game:GetService("ReplicatedStorage").Remotes.PushUp:FireServer()
+                    game:GetService("ReplicatedStorage").Remotes.Bench:FireServer()
+                    game:GetService("ReplicatedStorage").Remotes.PushUp:FireServer()
+                end) 
+            end 
+        end) 
 
-ss:Toggle("AutoUse Dumbells",function(t)
-dumb = t 
-while dumb do wait() 
-    pcall(function()
-game:GetService("ReplicatedStorage").Remotes.Dumbell:FireServer("Equip") 
-game:GetService("ReplicatedStorage").Remotes.Dumbell:FireServer("Rep",math.random(1,2))
-end) 
-end 
-end)
+        ss:Toggle("AutoUse Dumbells",function(t)
+            dumb = t 
+            while dumb do wait() 
+                pcall(function()
+                    game:GetService("ReplicatedStorage").Remotes.Dumbell:FireServer("Equip") 
+                    game:GetService("ReplicatedStorage").Remotes.Dumbell:FireServer("Rep",math.random(1,2))
+                end) 
+            end 
+        end)
     end
 })
 
@@ -292,7 +295,6 @@ InfiniteYieldTab:AddButton({
     end
 })
 
-
 InfiniteYieldTab:AddButton({
     Name = "HaKaiStatus",
     Callback = function()
@@ -314,4 +316,397 @@ InfiniteYieldTab2:AddButton({
     end
 })
 
+local function updateSpin(character)
+    if not character then return end
+    local humanRoot = character:FindFirstChild("HumanoidRootPart")
+    if not humanRoot then return end
+    
+    for _, v in pairs(humanRoot:GetChildren()) do
+        if v.Name == "Spinning" then
+            v:Destroy()
+        end
+    end
+    
+    if _G.AutoSpin then
+        local Spin = Instance.new("BodyAngularVelocity")
+        Spin.Name = "Spinning"
+        Spin.Parent = humanRoot
+        Spin.MaxTorque = Vector3.new(0, math.huge, 0)
+        Spin.AngularVelocity = Vector3.new(0, _G.SpinSpeed, 0)
+    end
+end
+
+local player = game:GetService("Players").LocalPlayer
+player.CharacterAdded:Connect(function(char)
+    task.wait(1)
+    if _G.AutoSpin then
+        updateSpin(char)
+    end
+end)
+
+InfiniteYieldTab2:AddToggle({
+    Name = "Ativar Auto Spin",
+    Default = false,
+    Callback = function(v)
+        _G.AutoSpin = v
+        updateSpin(player.Character)
+    end
+})
+
+InfiniteYieldTab2:AddTextbox({
+    Name = "Velocidade do Spin",
+    Default = "20",
+    TextDisappear = true,
+    Callback = function(Value)
+        local num = tonumber(Value)
+        if num then
+            _G.SpinSpeed = num
+            if _G.AutoSpin then
+                updateSpin(player.Character)
+            end
+            OrionLib:MakeNotification({
+                Name = "Spin Atualizado",
+                Content = "Velocidade definida para: " .. tostring(num),
+                Image = "rbxassetid://4483345998",
+                Time = 3
+            })
+        else
+            OrionLib:MakeNotification({
+                Name = "Erro",
+                Content = "Insira apenas números!",
+                Image = "rbxassetid://4483345998",
+                Time = 3
+            })
+        end
+    end	  
+})
+
+task.spawn(function()
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
+    
+    while true do
+        task.wait(0.1)
+        if _G.AutoEquipTools then
+            pcall(function()
+                local backpack = LocalPlayer:FindFirstChildOfClass("Backpack")
+                local character = LocalPlayer.Character
+                
+                if backpack and character then
+                    for _, tool in pairs(backpack:GetChildren()) do
+                        if tool:IsA("Tool") or tool:IsA("HopperBin") then
+                            tool.Parent = character
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+InfiniteYieldTab2:AddToggle({
+    Name = "Equip Tools",
+    Default = false,
+    Callback = function(Value)
+        _G.AutoEquipTools = Value
+
+        if not Value then
+            pcall(function()
+                local character = game:GetService("Players").LocalPlayer.Character
+                local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+                
+                if humanoid then
+                    humanoid:UnequipTools()
+                end
+            end)
+        end
+    end
+})
+local freezingua = nil
+local frozenParts = {}
+local badnames = {
+    "Head", "UpperTorso", "LowerTorso", "RightUpperArm", "LeftUpperArm",
+    "RightLowerArm", "LeftLowerArm", "RightHand", "LeftHand", "RightUpperLeg",
+    "LeftUpperLeg", "RightLowerLeg", "LeftLowerLeg", "RightFoot", "LeftFoot",
+    "Torso", "Right Arm", "Left Arm", "Right Leg", "Left Leg", "HumanoidRootPart"
+}
+
+local function FREEZENOOB(v)
+    local player = game:GetService("Players").LocalPlayer
+
+    if (v:IsA("BasePart") or v:IsA("UnionOperation")) and v.Anchored == false then
+        local BADD = false
+        for i = 1, #badnames do
+            if v.Name == badnames[i] then
+                BADD = true
+                break
+            end
+        end
+        if player.Character and v:IsDescendantOf(player.Character) then
+            BADD = true
+        end
+        if BADD == false then
+
+            for _, c in pairs(v:GetChildren()) do
+                if c:IsA("BodyPosition") or c:IsA("BodyGyro") then
+                    c:Destroy()
+                end
+            end
+
+            local bodypos = Instance.new("BodyPosition")
+            bodypos.Parent = v
+            bodypos.Position = v.Position
+            bodypos.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+            
+            local bodygyro = Instance.new("BodyGyro")
+            bodygyro.Parent = v
+            bodygyro.CFrame = v.CFrame
+            bodygyro.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+            
+            if not table.find(frozenParts, v) then
+                table.insert(frozenParts, v)
+            end
+        end
+    end
+end
+
+local freezeConnection = nil
+local frozenPosition = nil
+
+InfiniteYieldTab2:AddToggle({
+    Name = "Freeze Character",
+    Default = false,
+    Callback = function(Value)
+        local player = game:GetService("Players").LocalPlayer
+        local character = player.Character
+        local humanRoot = character and character:FindFirstChild("HumanoidRootPart")
+        
+        if Value then
+
+            if humanRoot then
+
+                frozenPosition = humanRoot.Position
+            
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid.PlatformStand = true
+                end
+                
+                freezeConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                    if character and humanRoot then
+                        humanRoot.Velocity = Vector3.new(0, 0, 0)
+                        humanRoot.RotVelocity = humanRoot.RotVelocity
+                        humanRoot.CFrame = CFrame.new(frozenPosition) * CFrame.new(Vector3.new()) * (humanRoot.CFrame - humanRoot.CFrame.Position)
+                    end
+                end)
+            end
+        else
+            if freezeConnection then
+                freezeConnection:Disconnect()
+                freezeConnection = nil
+            end
+            
+            if character then
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid.PlatformStand = false
+                end
+            end
+            frozenPosition = nil
+        end
+    end
+})
+local Noclipping = nil
+local Clip = true
+local originalCollisions = {}
+
+InfiniteYieldTab2:AddToggle({
+    Name = "Noclip",
+    Default = false,
+    Callback = function(Value)
+        local player = game:GetService("Players").LocalPlayer
+        local RunService = game:GetService("RunService")
+        
+        if Value then
+            Clip = false
+            originalCollisions = {}
+            
+            local function NoclipLoop()
+                if Clip == false and player.Character ~= nil then
+                    for _, child in pairs(player.Character:GetDescendants()) do
+                        if child:IsA("BasePart") then
+                            if originalCollisions[child] == nil then
+                                originalCollisions[child] = child.CanCollide
+                            end
+                            if child.CanCollide then
+                                child.CanCollide = false
+                            end
+                        end
+                    end
+                end
+            end
+            
+            Noclipping = RunService.Stepped:Connect(NoclipLoop)
+            
+            OrionLib:MakeNotification({
+                Name = "Noclip",
+                Content = "Noclip Ativado",
+                Image = "rbxassetid://4483345998",
+                Time = 2
+            })
+        else
+            if Noclipping then
+                Noclipping:Disconnect()
+                Noclipping = nil
+            end
+            Clip = true
+            
+            if player.Character then
+                for child, wasCollidable in pairs(originalCollisions) do
+                    if child and child.Parent then
+                        child.CanCollide = wasCollidable
+                    end
+                end
+                
+                for _, child in pairs(player.Character:GetDescendants()) do
+                    if child:IsA("BasePart") and child.Name ~= "HumanoidRootPart" then
+                        if child.Parent:IsA("Model") and (child.Parent.Name == player.Name or child.Parent:FindFirstChildOfClass("Humanoid")) then
+                            child.CanCollide = true
+                        end
+                    end
+                end
+            end
+            
+            originalCollisions = {}
+            
+            OrionLib:MakeNotification({
+                Name = "Noclip",
+                Content = "Noclip Desativado",
+                Image = "rbxassetid://4483345998",
+                Time = 2
+            })
+        end
+    end
+})
+
+local PlayersTab = Window:MakeTab({
+    Name = "Teleports",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+PlayersTab:AddSection({ Name = "PlayersFunctions" })
+
+local JogadoSelecionado = ""
+
+local function obterListaJogadores()
+    local lista = {}
+    for _, p in pairs(game:GetService("Players"):GetPlayers()) do
+        if p ~= game:GetService("Players").LocalPlayer then
+            table.insert(lista, p.Name)
+        end
+    end
+    return lista
+end
+
+local DropdownPlayers = PlayersTab:AddDropdown({
+    Name = "Selecionar Jogador",
+    Default = "Nenhum",
+    Options = obterListaJogadores(),
+    Callback = function(Value)
+        JogadoSelecionado = Value
+    end    
+})
+
+PlayersTab:AddButton({
+    Name = "Atualizar Lista de Jogadores",
+    Callback = function()
+        DropdownPlayers:Refresh(obterListaJogadores(), true)
+    end
+})
+
+PlayersTab:AddSection({ Name = "Ação" })
+
+PlayersTab:AddButton({
+    Name = "Teleporte Jogador",
+    Callback = function()
+        pcall(function()
+            local LocalPlayer = game:GetService("Players").LocalPlayer
+            local Alvo = game:GetService("Players"):FindFirstChild(JogadoSelecionado)
+            
+            if Alvo and Alvo.Character and Alvo.Character:FindFirstChild("HumanoidRootPart") then
+                local MeuChar = LocalPlayer.Character
+                local MeuRoot = MeuChar and MeuChar:FindFirstChild("HumanoidRootPart")
+                
+                if MeuRoot then
+
+                    MeuRoot.CFrame = Alvo.Character.HumanoidRootPart.CFrame * CFrame.new(0, 2, 0)
+                    
+                    OrionLib:MakeNotification({
+                        Name = "Teleporte Realizado",
+                        Content = "Você foi teletransportado para " .. JogadoSelecionado,
+                        Image = "rbxassetid://4483345998",
+                        Time = 3
+                    })
+                end
+            else
+                OrionLib:MakeNotification({
+                    Name = "Erro no Teleporte",
+                    Content = "Jogador inválido, morto ou não selecionado!",
+                    Image = "rbxassetid://4483345998",
+                    Time = 3
+                })
+            end
+        end)
+    end
+})
+PlayersTab:AddSection({ Name = "Dojo Teleports" })
+
+local LocaisDojos = {
+    ["Safe Zone"] = Vector3.new(88, 3, 47),
+    ["Bag Safe Zone"] = Vector3.new(97, 3, 61),
+    ["Cobra Kai Frente"] = Vector3.new(36, 3, 38),
+    ["Cobra Kai Fundo"] = Vector3.new(31, 3, -55),
+    ["Miyagi Do"] = Vector3.new(-60, 5, -1008)
+}
+
+local LocalSelecionado = ""
+
+PlayersTab:AddDropdown({
+    Name = "Escolher Destino",
+    Default = "Nenhum",
+    Options = {"Safe Zone", "Bag Safe Zone", "Cobra Kai Frente", "Cobra Kai Fundo", "Miyagi Do"},
+    Callback = function(Value)
+        LocalSelecionado = Value
+    end    
+})
+
+PlayersTab:AddButton({
+    Name = "Teleportar para o Dojo",
+    Callback = function()
+        pcall(function()
+            local LocalPlayer = game:GetService("Players").LocalPlayer
+            local MeuChar = LocalPlayer.Character
+            local MeuRoot = MeuChar and MeuChar:FindFirstChild("HumanoidRootPart")
+            if LocaisDojos[LocalSelecionado] and MeuRoot then
+                local Coordenada = LocaisDojos[LocalSelecionado]
+                MeuRoot.CFrame = CFrame.new(Coordenada.X, Coordenada.Y + 2, Coordenada.Z)
+                
+                OrionLib:MakeNotification({
+                    Name = "Teleportado",
+                    Content = "Você foi levado para: " .. LocalSelecionado,
+                    Image = "rbxassetid://4483345998",
+                    Time = 3
+                })
+            else
+                OrionLib:MakeNotification({
+                    Name = "Falha no Teleporte",
+                    Content = "Por favor, selecione um dojo válido no menu!",
+                    Image = "rbxassetid://4483345998",
+                    Time = 3
+                })
+            end
+        end)
+    end
+})
 OrionLib:Init()
