@@ -97,6 +97,7 @@ Heartbeat:Connect(function()
     end
 end)
 
+-- Criação das Abas
 local FarmTab = Window:MakeTab({
     Name = "Auto Farm",
     Icon = "rbxassetid://4483345998",
@@ -515,9 +516,18 @@ InfiniteYieldTab2:AddToggle({
         end
     end
 })
-local Noclipping = nil
-local Clip = true
-local originalCollisions = {}
+
+local noclipConnection = nil
+local isNoclipActive = false
+
+local membrosLegitimos = {
+    ["Head"] = true,
+    ["Torso"] = true, ["UpperTorso"] = true, ["LowerTorso"] = true,
+    ["Left Arm"] = true, ["LeftUpperArm"] = true, ["LeftLowerArm"] = true, ["LeftHand"] = true,
+    ["Right Arm"] = true, ["RightUpperArm"] = true, ["RightLowerArm"] = true, ["RightHand"] = true,
+    ["Left Leg"] = true, ["LeftUpperLeg"] = true, ["LeftLowerLeg"] = true, ["LeftFoot"] = true,
+    ["Right Leg"] = true, ["RightUpperLeg"] = true, ["RightLowerLeg"] = true, ["RightFoot"] = true
+}
 
 InfiniteYieldTab2:AddToggle({
     Name = "Noclip",
@@ -527,60 +537,50 @@ InfiniteYieldTab2:AddToggle({
         local RunService = game:GetService("RunService")
         
         if Value then
-            Clip = false
-            originalCollisions = {}
+            isNoclipActive = true
+            task.wait(0.1)
             
             local function NoclipLoop()
-                if Clip == false and player.Character ~= nil then
+                if isNoclipActive and player.Character ~= nil then
                     for _, child in pairs(player.Character:GetDescendants()) do
-                        if child:IsA("BasePart") then
-                            if originalCollisions[child] == nil then
-                                originalCollisions[child] = child.CanCollide
-                            end
-                            if child.CanCollide then
-                                child.CanCollide = false
-                            end
+                        if child:IsA("BasePart") and child.CanCollide == true then
+                            child.CanCollide = false
                         end
                     end
                 end
             end
             
-            Noclipping = RunService.Stepped:Connect(NoclipLoop)
+            noclipConnection = RunService.Stepped:Connect(NoclipLoop)
             
             OrionLib:MakeNotification({
                 Name = "Noclip",
-                Content = "Noclip Ativado",
+                Content = "Noclip Enabled",
                 Image = "rbxassetid://4483345998",
                 Time = 2
             })
         else
-            if Noclipping then
-                Noclipping:Disconnect()
-                Noclipping = nil
+            isNoclipActive = false
+            
+            if noclipConnection then
+                noclipConnection:Disconnect()
+                noclipConnection = nil
             end
-            Clip = true
             
             if player.Character then
-                for child, wasCollidable in pairs(originalCollisions) do
-                    if child and child.Parent then
-                        child.CanCollide = wasCollidable
-                    end
-                end
-                
                 for _, child in pairs(player.Character:GetDescendants()) do
-                    if child:IsA("BasePart") and child.Name ~= "HumanoidRootPart" then
-                        if child.Parent:IsA("Model") and (child.Parent.Name == player.Name or child.Parent:FindFirstChildOfClass("Humanoid")) then
+                    if child:IsA("BasePart") then
+                        if membrosLegitimos[child.Name] then
                             child.CanCollide = true
+                        else
+                            child.CanCollide = false
                         end
                     end
                 end
             end
             
-            originalCollisions = {}
-            
             OrionLib:MakeNotification({
                 Name = "Noclip",
-                Content = "Noclip Desativado",
+                Content = "Noclip Disabled",
                 Image = "rbxassetid://4483345998",
                 Time = 2
             })
