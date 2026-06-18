@@ -40,8 +40,9 @@ end
 
 local RunService = game:GetService("RunService")
 local Heartbeat = RunService.Heartbeat
-local INTERVALO_TEMPO_HB = 0.016
-local acumuladorStr = 0.016
+local INTERVALO_TEMPO_HB = 0.007
+local acumuladorStr = 0
+local ENVIO_POR_FRAME = 2
 
 local golpes = {
     "JumpKick", "HandKick", "DoubleReg", "CraneKick", 
@@ -56,15 +57,19 @@ Heartbeat:Connect(function(deltaTime)
             pcall(function()
                 local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
                 if Remotes then
-                    for _, nomeGolpe in ipairs(golpes) do
-                        local remote = Remotes:FindFirstChild(nomeGolpe)
-                        if remote then
-                            remote:FireServer()
+                    for i = 1, ENVIO_POR_FRAME do
+                        for _, nomeGolpe in ipairs(golpes) do
+                            local remote = Remotes:FindFirstChild(nomeGolpe)
+                            if remote then
+                                remote:FireServer()
+                                remote:FireServer()
+                            end
                         end
-                    end
-                    local Dumbell = Remotes:FindFirstChild("Dumbell")
-                    if Dumbell then
-                        Dumbell:FireServer("Rep", 3)
+                        
+                        local Dumbell = Remotes:FindFirstChild("Dumbell")
+                        if Dumbell then
+                            Dumbell:FireServer("Rep", 3)
+                        end
                     end
                 end
             end)
@@ -72,7 +77,7 @@ Heartbeat:Connect(function(deltaTime)
     end
 end)
 
-local ENVIO_POR_FRAME = 3
+local ENVIO_POR_FRAME = 2
 Heartbeat:Connect(function()
     if _G.AutoBench then
         pcall(function()
@@ -166,9 +171,9 @@ FarmTab:AddToggle({
         _G.AutoBench2 = v
         if v then
             task.spawn(function()
-                local envios = 3
+                local envios = 2
                 while _G.AutoBench2 do
-                    task.wait(0.016) 
+                    task.wait(0.008) 
                     pcall(function()
                         local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
                         if Remotes then
